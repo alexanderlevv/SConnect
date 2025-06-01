@@ -1,0 +1,21 @@
+{% extends 'music/base.html' %}
+{% block title %}Ответ на приглашение{% endblock %}
+{% block content %}
+<h2>Приглашение к совместному треку</h2>
+<div class="invite-card">
+    <div>
+        <b>От:</b> {{ invite.from_user.nickname|default:invite.from_user.username }}<br>
+        <b>Трек:</b> {{ invite.track_title }}<br>
+        <b>Сообщение:</b> {{ invite.message }}<br>
+        <b>Статус:</b> {{ invite.get_status_display }}
+    </div>
+    {% if invite.status == 'pending' %}
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn" name="action" value="accept">Принять</button>
+        <button class="btn" name="action" value="reject">Отклонить</button>
+    </form>
+    {% endif %}
+</div>
+<a href="/invites/">← К списку приглашений</a>
+{% endblock %}

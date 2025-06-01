@@ -1,0 +1,58 @@
+{% extends 'music/base.html' %}
+{% block title %}Профиль {{ profile_user.nickname|default:profile_user.username }}{% endblock %}
+{% block content %}
+<div class="profile-header">
+    {% if profile_user.avatar %}
+        <img class="avatar" src="{{ profile_user.avatar.url }}" alt="avatar">
+    {% endif %}
+    <div>
+        <h2>{{ profile_user.nickname|default:profile_user.username }}</h2>
+        <div>@{{ profile_user.username }}</div>
+    </div>
+</div>
+<h3>Загруженные треки</h3>
+{% for track in uploaded_tracks %}
+    <div class="track-card">
+        {% if track.cover_image %}
+            <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+        {% else %}
+            <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+        {% endif %}
+        <div class="track-info">
+            <div class="track-title"><a href="/track/{{ track.id }}/">{{ track.title }}</a></div>
+        </div>
+    </div>
+{% empty %}
+    <p>Нет загруженных треков.</p>
+{% endfor %}
+<h3>Избранные треки</h3>
+{% for track in favorite_tracks %}
+    <div class="track-card">
+        {% if track.cover_image %}
+            <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+        {% else %}
+            <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+        {% endif %}
+        <div class="track-info">
+            <div class="track-title"><a href="/track/{{ track.id }}/">{{ track.title }}</a></div>
+        </div>
+    </div>
+{% empty %}
+    <p>Нет избранных треков.</p>
+{% endfor %}
+<h3>Совместные треки</h3>
+{% for track in collab_tracks %}
+    <div class="track-card">
+        {% if track.cover_image %}
+            <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+        {% else %}
+            <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+        {% endif %}
+        <div class="track-info">
+            <div class="track-title"><a href="/track/{{ track.id }}/">{{ track.title }}</a></div>
+        </div>
+    </div>
+{% empty %}
+    <p>Нет совместных треков.</p>
+{% endfor %}
+{% endblock %}

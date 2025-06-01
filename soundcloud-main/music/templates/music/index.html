@@ -1,0 +1,41 @@
+{% extends 'music/base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<h2>Популярные треки</h2>
+{% for track in popular_tracks %}
+    <div class="track-card">
+        {% if track.cover_image %}
+    <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+{% else %}
+    <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+{% endif %}
+        <div class="track-info">
+            <div class="track-title"><a href="/track/{{ track.id }}/">{{ track.title }}</a></div>
+            <div class="track-authors">Автор: <a href="/profile/{{ track.owner.username }}/">{{ track.owner.nickname|default:track.owner.username }}</a></div>
+            <div>Лайков: {{ track.like_count }}</div>
+        </div>
+        <a class="btn" href="/track/{{ track.id }}/">▶️ Слушать</a>
+    </div>
+{% empty %}
+    <p>Нет популярных треков.</p>
+{% endfor %}
+<hr>
+<h2>Новые треки</h2>
+{% for track in new_tracks %}
+    <div class="track-card">
+        {% if track.cover_image %}
+    <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+{% else %}
+    <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+{% endif %}
+        <div class="track-info">
+            <div class="track-title"><a href="/track/{{ track.id }}/">{{ track.title }}</a></div>
+            <div class="track-authors">Автор: <a href="/profile/{{ track.owner.username }}/">{{ track.owner.nickname|default:track.owner.username }}</a></div>
+            <div>Лайков: {{ track.like_count }}</div>
+        </div>
+        <a class="btn" href="/track/{{ track.id }}/">▶️ Слушать</a>
+    </div>
+{% empty %}
+    <p>Нет новых треков.</p>
+{% endfor %}
+{% endblock %}

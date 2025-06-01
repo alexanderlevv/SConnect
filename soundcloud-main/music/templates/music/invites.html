@@ -1,0 +1,36 @@
+{% extends 'music/base.html' %}
+{% block title %}Инвайты{% endblock %}
+{% block content %}
+<h2>Входящие приглашения</h2>
+{% for invite in incoming %}
+    <div class="invite-card">
+        <div>
+            <b>{{ invite.from_user.nickname|default:invite.from_user.username }}</b> приглашает к совместному треку: <b>{{ invite.track_title }}</b><br>
+            Сообщение: {{ invite.message }}<br>
+            Статус: {{ invite.get_status_display }}
+        </div>
+        {% if invite.status == 'pending' %}
+        <form method="post" action="/invite/respond/{{ invite.id }}/">
+            {% csrf_token %}
+            <button class="btn" name="action" value="accept">Принять</button>
+            <button class="btn" name="action" value="reject">Отклонить</button>
+        </form>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>Нет входящих приглашений.</p>
+{% endfor %}
+<hr>
+<h2>Исходящие приглашения</h2>
+{% for invite in outgoing %}
+    <div class="invite-card">
+        <div>
+            <b>Кому:</b> {{ invite.to_user.nickname|default:invite.to_user.username }}<br>
+            <b>Трек:</b> {{ invite.track_title }}<br>
+            <b>Статус:</b> {{ invite.get_status_display }}
+        </div>
+    </div>
+{% empty %}
+    <p>Нет исходящих приглашений.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,62 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*.pyo
+*.db
+*.sqlite3
+*.idea
+
+# Media and static files
+/media/
+/static/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# VSCode and IDE configs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+*.env
+
+# Pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Coverage
+htmlcov/
+.coverage
+.tox/
+.nox/
+.coverage.*
+.cache
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Test output
+junit*.xml
+
+# Misc
+*.bak
+*.swp
+*.tmp

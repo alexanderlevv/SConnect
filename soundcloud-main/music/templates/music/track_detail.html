@@ -1,0 +1,54 @@
+{% extends 'music/base.html' %}
+{% block title %}{{ track.title }}{% endblock %}
+{% block content %}
+<div class="track-card">
+    {% if track.cover_image %}
+    <img class="track-cover" src="{{ track.cover_image.url }}" alt="cover">
+{% else %}
+    <img class="track-cover" src="/static/music/default_cover.png" alt="cover">
+{% endif %}
+    <div class="track-info">
+        <div class="track-title">{{ track.title }}</div>
+        <div class="track-authors">Автор: <a href="/profile/{{ track.owner.username }}/">{{ track.owner.nickname|default:track.owner.username }}</a>
+        {% if track.collaborators.all %}
+            <span> feat. {% for user in track.collaborators.all %}<a href="/profile/{{ user.username }}/">{{ user.nickname|default:user.username }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+        {% endif %}
+        </div>
+        <div>{{ track.description }}</div>
+        <div>
+            <button class="btn" id="like-btn" data-liked="{{ is_liked|yesno:'1,0' }}">❤️ <span id="like-count">{{ track.like_count }}</span></button>
+            <button class="btn" id="fav-btn" data-fav="{{ is_favorited|yesno:'1,0' }}">⭐</button>
+        </div>
+        {% if user.is_authenticated and user != track.owner %}
+        <hr>
+        <form method="post" action="/invite/send/{{ track.id }}/" style="margin-top:16px;">
+            {% csrf_token %}
+            <label for="to_user">Кому (ник):</label>
+            <input type="text" name="to_user" id="to_user" required placeholder="Введите ник пользователя">
+            <label for="message">Сообщение (необязательно):</label>
+            <textarea name="message" id="message" rows="2" placeholder="Текст приглашения"></textarea>
+            <button class="btn" type="submit">Пригласить к совместной работе</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+<audio id="audio" class="audio-player" controls src="{{ track.audio_file.url }}"></audio>
+<script src="/static/music/player.js"></script>
+<script>
+document.getElementById('like-btn').onclick = function() {
+    fetch('/like/{{ track.id }}/', {method: 'POST', headers: {"X-CSRFToken": '{{ csrf_token }}'}})
+      .then(r => r.json()).then(data => {
+        document.getElementById('like-count').textContent = data.like_count;
+        this.setAttribute('data-liked', data.liked ? '1' : '0');
+      });
+};
+document.getElementById('fav-btn').onclick = function() {
+    fetch('/favorite/{{ track.id }}/', {method: 'POST', headers: {"X-CSRFToken": '{{ csrf_token }}'}})
+      .then(r => r.json()).then(data => {
+        this.setAttribute('data-fav', data.favorited ? '1' : '0');
+      });
+};
+</script>
+{% if invite_error %}<div style="color:red">{{ invite_error }}</div>{% endif %}
+{% if invite_success %}<div style="color:green">{{ invite_success }}</div>{% endif %}
+{% endblock %}
